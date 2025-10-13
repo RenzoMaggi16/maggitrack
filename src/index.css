@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 250 100% 4%; /* #02000C - Azul muy oscuro, casi negro */
+    --foreground: 210 40% 98%;
+
+    --card: 250 100% 6%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 250 100% 6%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 240 100% 90%; /* #CCCCFF - Azul/púrpura claro */
+    --primary-foreground: 250 100% 4%;
+
+    --secondary: 245 70% 15%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 245 70% 15%;
+    --muted-foreground: 215 20% 75%;
+
+    --accent: 240 100% 90%;
+    --accent-foreground: 250 100% 4%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --profit: 142 76% 45%;
+    --loss: 0 84% 60%;
+
+    --border: 245 70% 15%;
+    --input: 245 70% 15%;
+    --ring: 240 100% 90%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 250 100% 6%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 240 100% 90%;
+    --sidebar-primary-foreground: 250 100% 4%;
+    --sidebar-accent: 245 70% 15%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 245 70% 15%;
+    --sidebar-ring: 240 100% 90%;
+
+    --chart-1: 142 76% 45%;
+    --chart-2: 240 100% 80%;
+    --chart-3: 245 70% 30%;
+    --chart-4: 240 70% 60%;
+    --chart-5: 235 80% 70%;
+  }
+
+  .dark {
+    --background: 250 100% 4%;
+    --foreground: 210 40% 98%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+@layer utilities {
+  .glow-profit-inner {
+    box-shadow: inset 0 0 15px 0px rgba(0, 255, 0, 0.4);
+  }
+  .glow-loss-inner {
+    box-shadow: inset 0 0 15px 0px rgba(255, 0, 0, 0.4);
+  }
+}
+@layer utilities {
+  .glow-profitt {
+    /* Color base del texto */
+    color: #4ade80; /* verde-400 de Tailwind */
+    /* Sombra de texto para el efecto glow */
+    text-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+  }
+
+  .glow-losss {
+    /* Color base del texto */
+    color: #f87171; /* rojo-400 de Tailwind */
+    /* Sombra de texto para el efecto glow */
+    text-shadow: 0 0 8px rgba(248, 113, 113, 0.6);
+  }
+}
+/* Clases para los degradados */
+.bg-gradient-card {
+  @apply bg-gradient-to-b from-[#02000C] to-[#150a40];
+}
+
+.bg-gradient-card-horizontal {
+  @apply bg-gradient-to-r from-[#02000C] to-[#150a40];
+}
+
+.glow-profit {
+  @apply shadow-[0_0_15px_rgba(0,255,100,0.3)];
+}
+
+.glow-loss {
+  @apply shadow-[0_0_15px_rgba(255,0,0,0.3)];
+}
