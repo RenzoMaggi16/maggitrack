@@ -60,6 +60,18 @@ const tipoEntradaOptions = [
   { value: "M5 Limit", label: "M5 Limit" },
 ];
 
+// Opciones para Emoción
+const emocionOptions = [
+  { value: "Confianza", label: "Confianza" },
+  { value: "Paciencia", label: "Paciencia" },
+  { value: "Euforia", label: "Euforia" },
+  { value: "Neutral", label: "Neutral" },
+  { value: "Ansiedad", label: "Ansiedad" },
+  { value: "Miedo", label: "Miedo" },
+  { value: "Frustración", label: "Frustración" },
+  { value: "Venganza", label: "Venganza" },
+];
+
 export const TradeForm = () => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
@@ -79,6 +91,7 @@ export const TradeForm = () => {
     liquidez: "",
     tipo_entrada: "",
     parcial_porcentaje: "",
+    emocion: "", // Nuevo campo para emoción
     imagenes: [] as File[],
   });
 
@@ -118,6 +131,7 @@ export const TradeForm = () => {
       liquidez: formData.liquidez || null,
       tipo_entrada: formData.tipo_entrada || null,
       parcial_porcentaje: formData.parcial_porcentaje ? parseFloat(formData.parcial_porcentaje) : null,
+      emocion: formData.emocion || null, // Nuevo campo para emoción
     });
 
     if (error) {
@@ -141,6 +155,7 @@ export const TradeForm = () => {
         liquidez: "",
         tipo_entrada: "",
         parcial_porcentaje: "",
+        emocion: "", // Reiniciar el campo de emoción
         imagenes: [],
       });
       queryClient.invalidateQueries({ queryKey: ["trades"] });
@@ -190,32 +205,6 @@ export const TradeForm = () => {
                 value={formData.pnl_neto}
                 onChange={(e) => setFormData({ ...formData, pnl_neto: e.target.value })}
                 required
-                className="bg-secondary"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="entrada">Precio Entrada</Label>
-              <Input
-                id="entrada"
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                value={formData.entrada}
-                onChange={(e) => setFormData({ ...formData, entrada: e.target.value })}
-                className="bg-secondary"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="salida">Precio Salida</Label>
-              <Input
-                id="salida"
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                value={formData.salida}
-                onChange={(e) => setFormData({ ...formData, salida: e.target.value })}
                 className="bg-secondary"
               />
             </div>
@@ -286,6 +275,17 @@ export const TradeForm = () => {
                 value={formData.tipo_entrada}
                 onChange={(value) => setFormData({ ...formData, tipo_entrada: value })}
                 placeholder="Seleccionar tipo..."
+                emptyMessage="No se encontraron opciones."
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="emocion">Emoción</Label>
+              <Combobox
+                options={emocionOptions}
+                value={formData.emocion}
+                onChange={(value) => setFormData({ ...formData, emocion: value })}
+                placeholder="Seleccionar emoción..."
                 emptyMessage="No se encontraron opciones."
               />
             </div>

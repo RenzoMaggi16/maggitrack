@@ -83,9 +83,9 @@ export const PnLCalendar = () => {
   };
 
   return (
-    <Card className="border-border h-full w-full bg-gradient-card">
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-lg font-medium text-primary">
+        <CardTitle className="text-lg font-medium">
           {format(currentMonth, "MMMM yyyy", { locale: es })}
         </CardTitle>
         <div className="flex space-x-2">
@@ -93,7 +93,7 @@ export const PnLCalendar = () => {
             variant="outline" 
             size="icon" 
             onClick={goToPreviousMonth}
-            className="h-8 w-8 text-primary hover:text-primary-foreground hover:bg-primary/80"
+            className="h-8 w-8"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -101,13 +101,13 @@ export const PnLCalendar = () => {
             variant="outline" 
             size="icon" 
             onClick={goToNextMonth}
-            className="h-8 w-8 text-primary hover:text-primary-foreground hover:bg-primary/80"
+            className="h-8 w-8"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="w-full">
+      <CardContent>
         <Calendar
           mode="single"
           month={currentMonth}
@@ -133,22 +133,22 @@ export const PnLCalendar = () => {
               const isCurrentMonth = isThisMonth(date);
               
               // Determinar los estilos condicionales
-              let borderClass = "border border-gray-700";
-              let textClass = "text-gray-400";
+              let borderClass = "border border-border";
+              let textClass = "text-muted-foreground";
               let glowClass = "";
               
               if (isProfitable) {
-              borderClass = "border border-green-500";
-              textClass = "text-green-400";
-              glowClass = "glow-profit-inner"; // <--- CAMBIO AQUÍ
+                borderClass = "border border-[hsl(var(--profit)_/_0.5)]";
+                textClass = "text-[hsl(var(--profit))]";
+                glowClass = "glow-profit-inner";
               } else if (isLoss) {
-                 borderClass = "border border-red-500";
-                 textClass = "text-red-400";
-                  glowClass = "glow-loss-inner"; // <--- CAMBIO AQUÍ
-                  }
+                borderClass = "border border-[hsl(var(--loss)_/_0.5)]";
+                textClass = "text-[hsl(var(--loss))]";
+                glowClass = "glow-loss-inner";
+              }
               
               return (
-                <div className={`bg-[#080020] rounded-md ${borderClass} ${glowClass} flex flex-col p-1 h-24 w-full`}>
+                <div className={`bg-card rounded-md ${borderClass} ${glowClass} flex flex-col p-1 h-24 w-full`}>
                   {/* Número del día en la esquina superior derecha */}
                   <div className="self-end">
                     {isCurrentDay ? (

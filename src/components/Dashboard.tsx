@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, Activity, Award } from "lucide-react";
+import { TrendingUp, TrendingDown, Activity, Smile } from "lucide-react";
 import { PnLCalendar } from "./PnLCalendar";
 import { RecentTrades } from "./RecentTrades";
 
@@ -11,6 +11,7 @@ interface Trade {
   fecha: string;
   simbolo: string;
   reglas_cumplidas: boolean;
+  emocion?: string;
 }
 
 export const Dashboard = () => {
@@ -35,11 +36,27 @@ export const Dashboard = () => {
     const rulesComplied = trades.filter(t => t.reglas_cumplidas).length;
     const ruleComplianceRate = totalTrades > 0 ? (rulesComplied / totalTrades) * 100 : 0;
     
-    const tradeScore = totalTrades > 0 
-      ? Math.round((winRate / 100) * (pnlTotal > 0 ? 1 : 0.5) * (ruleComplianceRate / 100) * 100)
-      : 0;
+    // Calcular la emoción más frecuente
+    const emocionesMap = new Map<string, number>();
+    
+    trades.forEach(trade => {
+      if (trade.emocion) {
+        const count = emocionesMap.get(trade.emocion) || 0;
+        emocionesMap.set(trade.emocion, count + 1);
+      }
+    });
+    
+    let emocionFrecuente = "-";
+    let maxCount = 0;
+    
+    emocionesMap.forEach((count, emocion) => {
+      if (count > maxCount) {
+        maxCount = count;
+        emocionFrecuente = emocion;
+      }
+    });
 
-    return { totalTrades, pnlTotal, winRate, tradeScore, ruleComplianceRate };
+    return { totalTrades, pnlTotal, winRate, ruleComplianceRate, emocionFrecuente };
   };
 
   const metrics = calculateMetrics();
@@ -62,19 +79,19 @@ export const Dashboard = () => {
       
       {/* Fila inferior: Tarjetas de estadísticas */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-border bg-gradient-card">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               PnL Total
             </CardTitle>
             {isProfitable ? (
-              <TrendingUp className="h-4 w-4 text-profit" />
+              <TrendingUp className="h-4 w-4 text-[hsl(var(--profit))]" />
             ) : (
-              <TrendingDown className="h-4 w-4 text-loss" />
+              <TrendingDown className="h-4 w-4 text-[hsl(var(--loss))]" />
             )}
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${isProfitable ? 'text-profit glow-profitt' : 'text-loss glow-losss'}`}>
+            <div className={`text-2xl font-bold ${isProfitable ? 'text-[hsl(var(--profit))]' : 'text-[hsl(var(--loss))]'}`}>
               ${metrics.pnlTotal.toFixed(2)}
             </div>
             <p className="text-xs text-muted-foreground">
@@ -83,47 +100,53 @@ export const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-border bg-gradient-card">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Tasa de Acierto
             </CardTitle>
-            <Activity className="h-4 w-4 text-primary" />
+            <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">{metrics.winRate.toFixed(1)}%</div>
+            <div className="text-2xl font-bold">
+              {metrics.winRate.toFixed(1)}%
+            </div>
             <p className="text-xs text-muted-foreground">
               Win rate general
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-border bg-gradient-card">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
               Cumplimiento de Reglas
             </CardTitle>
-            <Activity className="h-4 w-4 text-primary" />
+            <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">{metrics.ruleComplianceRate.toFixed(1)}%</div>
+            <div className="text-2xl font-bold">
+              {metrics.ruleComplianceRate.toFixed(1)}%
+            </div>
             <p className="text-xs text-muted-foreground">
               Disciplina de trading
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-border bg-gradient-card">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
-              Trade Score
+              Emoción Frecuente
             </CardTitle>
-            <Award className="h-4 w-4 text-accent" />
+            <Smile className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-accent">{metrics.tradeScore}</div>
+            <div className="text-2xl font-bold">
+              {metrics.emocionFrecuente}
+            </div>
             <p className="text-xs text-muted-foreground">
-              Puntuación general
+              Basado en tus trades
             </p>
           </CardContent>
         </Card>

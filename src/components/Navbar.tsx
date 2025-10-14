@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { TrendingUp, LogOut } from "lucide-react";
 import { toast } from "sonner";
+import { ThemeToggle } from "./ThemeToggle";
 
 export const Navbar = () => {
   const handleSignOut = async () => {
@@ -24,15 +25,18 @@ export const Navbar = () => {
             <h1 className="text-xl font-bold">Trading Journal</h1>
           </div>
           
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={handleSignOut}
-            className="gap-2"
-          >
-            <LogOut className="h-4 w-4" />
-            Salir
-          </Button>
+          <div className="flex items-center space-x-2">
+            <ThemeToggle />
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleSignOut}
+              className="gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Salir
+            </Button>
+          </div>
         </div>
       </div>
     </nav>

@@ -27,9 +27,9 @@ export const RecentTrades = () => {
   });
 
   return (
-    <Card className="border-border h-full bg-gradient-card">
+    <Card>
       <CardHeader>
-        <CardTitle className="text-primary">Operaciones Recientes</CardTitle>
+        <CardTitle>Operaciones Recientes</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -45,14 +45,14 @@ export const RecentTrades = () => {
                 key={trade.id} 
                 className={`p-3 rounded-lg border ${
                   Number(trade.pnl_neto) > 0 
-                    ? 'border-green-500/30 bg-green-500/5 glow-profit' 
-                    : 'border-red-500/30 bg-red-500/5 glow-loss'
+                    ? 'border-[hsl(var(--profit)_/_0.3)] bg-[hsl(var(--profit)_/_0.05)]' 
+                    : 'border-[hsl(var(--loss)_/_0.3)] bg-[hsl(var(--loss)_/_0.05)]'
                 }`}
               >
                 <div className="flex justify-between items-center">
-                  <Badge variant="outline" className="bg-[#080020] text-primary border-primary/30">{trade.simbolo}</Badge>
+                  <Badge variant="outline">{trade.simbolo}</Badge>
                   <span className={`font-semibold ${
-                    Number(trade.pnl_neto) > 0 ? 'text-profit' : 'text-loss'
+                    Number(trade.pnl_neto) > 0 ? 'text-[hsl(var(--profit))]' : 'text-[hsl(var(--loss))]'
                   }`}>
                     ${Number(trade.pnl_neto).toFixed(2)}
                   </span>
