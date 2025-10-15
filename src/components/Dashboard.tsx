@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, TrendingDown, Activity, Smile } from "lucide-react";
 import { PnLCalendar } from "./PnLCalendar";
 import { RecentTrades } from "./RecentTrades";
+import EquityChart from "./EquityChart";
+import { useMemo } from "react";
 
 interface Trade {
   id: string;
@@ -59,6 +61,24 @@ export const Dashboard = () => {
     return { totalTrades, pnlTotal, winRate, ruleComplianceRate, emocionFrecuente };
   };
 
+  // Procesar datos para el gráfico de equity curve
+  const equityCurveData = useMemo(() => {
+    if (!trades || trades.length === 0) return [];
+
+    const sortedTrades = [...trades].sort((a, b) => 
+      new Date(a.fecha).getTime() - new Date(b.fecha).getTime()
+    );
+
+    let runningPnl = 0;
+    return sortedTrades.map(trade => {
+      runningPnl += Number(trade.pnl_neto);
+      return {
+        date: new Date(trade.fecha).toLocaleDateString(),
+        cumulativePnl: runningPnl,
+      };
+    });
+  }, [trades]);
+
   const metrics = calculateMetrics();
   const isProfitable = metrics.pnlTotal > 0;
 
@@ -77,79 +97,66 @@ export const Dashboard = () => {
         </div>
       </div>
       
-      {/* Fila inferior: Tarjetas de estadísticas */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              PnL Total
-            </CardTitle>
-            {isProfitable ? (
-              <TrendingUp className="h-4 w-4 text-[hsl(var(--profit))]" />
-            ) : (
-              <TrendingDown className="h-4 w-4 text-[hsl(var(--loss))]" />
-            )}
-          </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold ${isProfitable ? 'text-[hsl(var(--profit))]' : 'text-[hsl(var(--loss))]'}`}>
-              ${metrics.pnlTotal.toFixed(2)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {metrics.totalTrades} operaciones
-            </p>
-          </CardContent>
-        </Card>
+      {/* Sección inferior: Gráfico y estadísticas */}
+      <div className="bottom-section-container flex flex-col gap-6">
+        {/* Fila 1: El Gráfico */}
+        <div className="chart-wrapper min-h-[300px]">
+          <EquityChart data={equityCurveData} />
+        </div>
+        
+        {/* Fila 2: El nuevo contenedor para las estadísticas */}
+        <div className="stats-container flex justify-between items-stretch gap-5">
+          <Card className="flex-1">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Tasa de Acierto
+              </CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {metrics.winRate.toFixed(1)}%
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Win rate general
+              </p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Tasa de Acierto
-            </CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {metrics.winRate.toFixed(1)}%
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Win rate general
-            </p>
-          </CardContent>
-        </Card>
+          <Card className="flex-1">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Cumplimiento de Reglas
+              </CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {metrics.ruleComplianceRate.toFixed(1)}%
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Disciplina de trading
+              </p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Cumplimiento de Reglas
-            </CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {metrics.ruleComplianceRate.toFixed(1)}%
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Disciplina de trading
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Emoción Frecuente
-            </CardTitle>
-            <Smile className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {metrics.emocionFrecuente}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Basado en tus trades
-            </p>
-          </CardContent>
-        </Card>
+          <Card className="flex-1">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Emoción Frecuente
+              </CardTitle>
+              <Smile className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {metrics.emocionFrecuente}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Basado en tus trades
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

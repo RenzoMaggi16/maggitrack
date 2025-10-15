@@ -60,6 +60,12 @@ All colors MUST be HSL.
   /* Gradiente radial - tema claro */
   --gradient-start-color: hsla(240, 10%, 70%, 0.08);
   --gradient-end-color: hsla(0, 0%, 100%, 0);
+  
+  /* Gradientes para celdas de calendario */
+  --calendar-profit-gradient-start: hsla(142, 65%, 50%, 0.15);
+  --calendar-profit-gradient-end: hsla(142, 65%, 50%, 0.02);
+  --calendar-loss-gradient-start: hsla(0, 80%, 60%, 0.15);
+  --calendar-loss-gradient-end: hsla(0, 80%, 60%, 0.02);
 }
 
 
@@ -113,6 +119,12 @@ All colors MUST be HSL.
   /* Gradiente radial - tema oscuro monocromático */
   --gradient-start-color: hsla(0, 0%, 20%, 0.15);
   --gradient-end-color: hsla(0, 0%, 5%, 0);
+  
+  /* Gradientes para celdas de calendario */
+  --calendar-profit-gradient-start: hsla(142, 70%, 40%, 0.2);
+  --calendar-profit-gradient-end: hsla(142, 70%, 40%, 0.03);
+  --calendar-loss-gradient-start: hsla(0, 84%, 45%, 0.2);
+  --calendar-loss-gradient-end: hsla(0, 84%, 45%, 0.03);
 }
 }
 
@@ -164,4 +176,13 @@ All colors MUST be HSL.
 
 .glow-loss {
   @apply shadow-[0_0_15px_hsla(var(--loss),0.3)];
+}
+
+/* Nuevos gradientes para celdas de calendario */
+.bg-calendar-profit {
+  background: radial-gradient(circle at center, var(--calendar-profit-gradient-start), var(--calendar-profit-gradient-end) 70%), hsl(var(--card));
+}
+
+.bg-calendar-loss {
+  background: radial-gradient(circle at center, var(--calendar-loss-gradient-start), var(--calendar-loss-gradient-end) 70%), hsl(var(--card));
 }

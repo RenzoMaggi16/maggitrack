@@ -194,7 +194,6 @@ export const TradesTable = () => {
                       <TableCell>
                         <Badge variant="outline">{trade.simbolo}</Badge>
                       </TableCell>
-                      // Modificar las celdas de PnL para usar las variables CSS
                       <TableCell className={`font-medium ${Number(trade.pnl_neto) > 0 ? 'text-[hsl(var(--profit))]' : 'text-[hsl(var(--loss))]'}`}>
                         ${Number(trade.pnl_neto).toFixed(2)}
                       </TableCell>
